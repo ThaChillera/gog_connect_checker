@@ -2,6 +2,8 @@
 import urllib.request
 from bs4 import BeautifulSoup
 
+#download list of games
+
 f = open("output.html", 'w')
 
 content = urllib.request.urlopen('http://gog.com/connect').read().decode('utf-8')
@@ -17,4 +19,29 @@ for game in root.find_all('span'):
     if (classvalue and classvalue[0] == 'product-title__text' and game.string):
         games.add(game.string)
 
-print(games)
+# generate RSS feed
+
+import datetime
+from rfeed.rfeed import *
+
+feedItems = []
+
+for game in games:
+    feedItems.append(Item(
+    title = game,
+    link = "http://www.gog.com/connect", 
+    description = game,
+    guid = Guid("http://www.gog.com/connect/" + game.replace(' ', '')),
+    pubDate = datetime.datetime.now(datetime.timezone.utc)))
+
+feed = Feed(
+    title = "GoG Connect Feed",
+    link = "http://www.example.com/rss",
+    description = "This is a feed of all GoG connect games",
+    language = "en-US",
+    lastBuildDate = datetime.datetime.now(),
+    items = feedItems)
+
+rssFile = open('rss.xml', 'w')
+rssFile.write(feed.rss())
+rssFile.close()
