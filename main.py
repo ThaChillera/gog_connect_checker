@@ -24,31 +24,41 @@ if (not rss_location):
 
 import urllib.request
 from bs4 import BeautifulSoup
+import datetime
 
 #download list of games
 root = BeautifulSoup(urllib.request.urlopen('http://gog.com/connect').read().decode('utf-8'), 'html.parser')
 
-games = set()
+games = dict()
 
 for game in root.find_all('span'):
     classvalue = game.get('class')
     if (classvalue and classvalue[0] == 'product-title__text' and game.string):
-        games.add(game.string)
+        games[game.string] = datetime.datetime.now()
 
 # generate RSS feed
 
-import datetime
 from rfeed.rfeed import *
+import os.path
+import feedparser
+
+if os.path.isfile(rss_location):
+    newsfeed = feedparser.parse(rss_location)
+    for entry in newsfeed.entries:
+        if entry.title in games:
+            date = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %Z')
+            games[entry.title] = date
 
 feedItems = []
 
-for game in games:
+for game, date in games.items():
     feedItems.append(Item(
     title = game,
     link = "http://www.gog.com/connect", 
     description = game,
     guid = Guid("http://www.gog.com/connect/" + game.replace(' ', '')),
-    pubDate = datetime.datetime.now(datetime.timezone.utc)))
+    pubDate = date
+    ))
 
 feed = Feed(
     title = "GoG Connect Feed",
