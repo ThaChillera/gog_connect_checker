@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-#get rss save location from arguments
+# get rss save location from arguments
 import sys
 import getopt
 
@@ -26,9 +26,10 @@ import urllib.request
 from bs4 import BeautifulSoup
 import datetime
 
-#download list of games
+# download list of games
 root = BeautifulSoup(urllib.request.urlopen('http://gog.com/connect').read().decode('utf-8'), 'html.parser')
 
+# dict: key = game title, value = retrieval date
 games = dict()
 
 for game in root.find_all('span'):
@@ -36,9 +37,7 @@ for game in root.find_all('span'):
     if (classvalue and classvalue[0] == 'product-title__text' and game.string):
         games[game.string] = datetime.datetime.now()
 
-# generate RSS feed
-
-from rfeed.rfeed import *
+# make sure existing results are updated, not overwritten
 import os.path
 import feedparser
 
@@ -48,6 +47,9 @@ if os.path.isfile(rss_location):
         if entry.title in games:
             date = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %Z')
             games[entry.title] = date
+
+# generate RSS feed
+from rfeed.rfeed import *
 
 feedItems = []
 
