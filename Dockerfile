@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir beautifulsoup4 feedparser
 
 COPY . .
 
-CMD [ "python","./main.py","-r","$LOCATION"]
+CMD [ "python","./main.py"]
