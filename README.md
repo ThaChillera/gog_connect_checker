@@ -18,8 +18,8 @@ The script should rune periodically (every 24 hours) to keep track of what games
 ## Docker
 The run command results is the file feed.rss being generated into the /tmp folder.
 The save location is fed via the $RSS_LOCATION environment variable
-  * build: `docker build -t gogconnect .`
-  * run: `docker run -e "RSS_LOCATION=/rss/feed.rss" -v /tmp/rss:/rss --rm gogconnect`
+
+`docker run -e "RSS_LOCATION=/rss/feed.rss" -e "FEED_URL=github.com/thachillera/gog_connect_checker" -v /tmp/rss:/rss --rm thachillera/gogconnect:latest`
 
 # TODO:
   * ~~Update existing RSS file instead of re-making from scratch~~
