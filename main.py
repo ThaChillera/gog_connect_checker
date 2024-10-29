@@ -3,14 +3,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 
 #download list of games
-
-f = open("output.html", 'w')
-
-content = urllib.request.urlopen('http://gog.com/connect').read().decode('utf-8')
-f.write(content)
-f.close()
-
-root = BeautifulSoup(content, 'html.parser')
+root = BeautifulSoup(urllib.request.urlopen('http://gog.com/connect').read().decode('utf-8'), 'html.parser')
 
 games = set()
 
