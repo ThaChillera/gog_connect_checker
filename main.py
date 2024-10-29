@@ -1,26 +1,32 @@
 #!/usr/bin/python3
 
-# get rss save location from arguments
-import sys
-import getopt
-
-instructions = 'test.py -r | --rss <rss file>'
+# if env has been set, use as location
+import os
 rss_location = ''
-try:
-    opts, args = getopt.getopt(sys.argv[1:],"hr:", ["rss="])
-except getopt.GetoptError:
-    print(instructions, file=sys.stderr)
-    sys.exit(2)
-for opt, arg in opts:
-    if opt == '-h':
-        print(instructions)
-        sys.exit()
-    elif opt in ('-r', '--rss'):
-        rss_location = arg
+if os.environ['RSS_LOCATION'] :
+	rss_location = os.environ['RSS_LOCATION']
 
-if (not rss_location):
-    print(instructions, file=sys.stderr)
-    sys.exit(2)
+# get rss save location from arguments
+if not rss_location :
+    import sys
+    import getopt
+    
+    instructions = 'test.py -r | --rss <rss file> | $RSS_LOCATION'
+    try:
+        opts, args = getopt.getopt(sys.argv[1:],"hr:", ["rss="])
+    except getopt.GetoptError:
+        print(instructions, file=sys.stderr)
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print(instructions)
+            sys.exit()
+        elif opt in ('-r', '--rss'):
+            rss_location = arg
+    
+    if (not rss_location):
+        print(instructions, file=sys.stderr)
+        sys.exit(2)
 
 import urllib.request
 from bs4 import BeautifulSoup

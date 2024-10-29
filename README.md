@@ -11,9 +11,14 @@ Intended functionality is for the previous file to be read and updated as needed
 
 The script should rune periodically (every 24 hours) to keep track of what games are available
 
+## Docker
+The run command results is the file feed.rss being generated into the /tmp folder.
+The save location is fed via the $RSS_LOCATION environment variable
+  * build: `docker build -t gogconnect .`
+  * run: `docker run -e "RSS_LOCATION=/rss/feed.rss" -v /tmp/rss:/rss --rm gogconnect`
+
 # TODO:
   * ~~Update existing RSS file instead of re-making from scratch~~
-  * Create Docker File
-    * RSS Location passed by ENV variable
-    * Runs script every time docker is run
+  * ~~Create Docker File~~
+    * ~~RSS Location passed by ENV variable~~
   * Add way to specify feed URL
