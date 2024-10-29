@@ -4,7 +4,11 @@
 import os
 rss_location = ''
 if os.environ['RSS_LOCATION'] :
-	rss_location = os.environ['RSS_LOCATION']
+    rss_location = os.environ['RSS_LOCATION']
+
+feed_url = 'github.com/ThaChillera/gog_connect_checker'
+if os.environ['FEED_URL'] :
+    feed_url = os.environ['FEED_URL']
 
 # get rss save location from arguments
 if not rss_location :
@@ -70,7 +74,7 @@ for game, date in games.items():
 
 feed = Feed(
     title = "GoG Connect Feed",
-    link = "http://www.example.com/rss",
+    link = feed_url,
     description = "This is a feed of all GoG connect games",
     language = "en-US",
     lastBuildDate = datetime.datetime.now(),
